@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>BaybexAI Admin</title>
+<link rel="icon" href="/assets/favicon.png">
+
+<style>
+@font-face{font-family:'Plus Jakarta Sans';font-weight:400;font-display:swap;src:url(/assets/fonts/plus-jakarta-sans-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-weight:600;font-display:swap;src:url(/assets/fonts/plus-jakarta-sans-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-weight:700;font-display:swap;src:url(/assets/fonts/plus-jakarta-sans-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-weight:800;font-display:swap;src:url(/assets/fonts/plus-jakarta-sans-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Hind Siliguri';font-weight:400;font-display:swap;src:url(/assets/fonts/hind-siliguri-bengali-400-normal.woff2) format('woff2');unicode-range:U+0980-09FE,U+200C-200D,U+25CC}
+@font-face{font-family:'Hind Siliguri';font-weight:600;font-display:swap;src:url(/assets/fonts/hind-siliguri-bengali-600-normal.woff2) format('woff2');unicode-range:U+0980-09FE,U+200C-200D,U+25CC}
+@font-face{font-family:'Hind Siliguri';font-weight:700;font-display:swap;src:url(/assets/fonts/hind-siliguri-bengali-700-normal.woff2) format('woff2');unicode-range:U+0980-09FE,U+200C-200D,U+25CC}
+:root{--p:#124874;--a:#008390;--ink:#0f172a;--mut:#64748b;--line:#e5e9f0;--bg:#f3f6fa;--red:#dc2626}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Hind Siliguri',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px}
+html[lang=bn] body{font-family:'Hind Siliguri','Plus Jakarta Sans',system-ui,sans-serif}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(150deg,var(--p),#12466F);padding:20px}
+.login form{background:#fff;border-radius:20px;padding:36px;width:100%;max-width:380px;display:grid;gap:16px;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)}
+.login h1{display:flex;align-items:center;gap:10px;color:var(--p);font-size:22px}
+.login h1 img{width:40px}
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+aside{background:var(--p);color:#cbd5e1;padding:18px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+aside .brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:18px;padding:6px 10px 20px}
+aside .brand img{width:34px}
+aside nav{display:grid;gap:2px}
+aside nav button{display:flex;gap:10px;align-items:center;background:none;border:0;color:inherit;padding:10px 12px;border-radius:10px;text-align:left;font-weight:600}
+aside nav button:hover{background:rgba(255,255,255,.07);color:#fff}
+aside nav button.on{background:var(--a);color:#fff}
+aside nav .grp{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;opacity:.5;padding:14px 12px 4px}
+aside .nb{margin-left:auto;background:#ef4444;color:#fff;border-radius:999px;font-size:11px;padding:1px 7px}
+main{padding:24px 28px;min-width:0}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.top h2{font-size:22px;color:var(--p);margin-right:auto}
+.burger{display:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:18px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{position:fixed;z-index:40;left:0;width:250px;transform:translateX(-100%);transition:.2s}aside.open{transform:none}.burger{display:block}main{padding:16px}}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;color:var(--p);text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--a)}
+.btn.pr{background:var(--a);border-color:var(--a);color:#fff}
+.btn.dk{background:var(--p);border-color:var(--p);color:#fff}
+.btn.dn{color:var(--red)}
+.btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.5}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px}
+.panel h3{color:var(--p);font-size:16px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+.kpi b{font-size:28px;color:var(--p);display:block}
+.kpi span{color:var(--mut);font-weight:600;font-size:13px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--mut)}
+tr:hover td{background:#fafbfd}
+.tbl{overflow:auto}
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700;background:#eef2f7;color:#334155}
+.chip.new{background:#fef3c7;color:#92400e}.chip.contacted{background:#dbeafe;color:#1e40af}.chip.demo{background:#ede9fe;color:#5b21b6}.chip.won{background:#dcfce7;color:#166534}.chip.lost{background:#fee2e2;color:#991b1b}
+.chip.off{background:#f1f5f9;color:#94a3b8}
+.mut{color:var(--mut)}
+label.f,div.f{display:grid;gap:6px;font-weight:600;font-size:13px;color:#334155}
+input,select,textarea{font:inherit;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fbfcfe;width:100%;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--a);background:#fff}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--a)}
+input[type=color]{padding:2px;height:42px;width:70px}
+textarea{min-height:80px;resize:vertical}
+.fg{display:grid;gap:16px}
+.bi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bi>div{display:grid;gap:4px}
+.bi small{font-size:11px;font-weight:700;color:var(--mut);letter-spacing:.5px}
+.cnt{font-weight:600!important;letter-spacing:0!important}
+.serp{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff;display:grid;gap:2px;font-family:Arial,sans-serif}.serp span{font-weight:400}.serp .u{color:#202124;font-size:13px}.serp .t{color:#1a0dab;font-size:19px;line-height:1.3}.serp .d{color:#4d5156;font-size:14px;line-height:1.5}
+.bar{display:flex;align-items:center;gap:8px}.bar i{display:block;height:8px;border-radius:4px;background:var(--a);min-width:2px}
+.agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}.delta{font-size:12.5px;font-weight:700}.up{color:#059669}.down{color:#dc2626}
+@media(max-width:700px){.bi{grid-template-columns:1fr}}
+.img{display:flex;gap:10px;align-items:center}
+.img .pv{width:64px;height:64px;border-radius:10px;border:1px solid var(--line);object-fit:contain;background:#f8fafc;flex:none}
+.gal{display:flex;flex-wrap:wrap;gap:8px}
+.gal div{position:relative}
+.gal img{width:90px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.gal button{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:0;background:var(--red);color:#fff;font-size:12px;line-height:1}
+.chk{display:flex;gap:10px;align-items:center;font-weight:600}
+.drawer{position:fixed;inset:0;background:rgba(2,8,23,.5);z-index:60;display:none;justify-content:flex-end}
+.drawer.open{display:flex}
+.drawer .in{background:#fff;width:min(780px,100%);height:100%;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:18px}
+.drawer .hd{display:flex;align-items:center;gap:10px}
+.drawer .hd h3{margin-right:auto;color:var(--p)}
+.drawer .ft{position:sticky;bottom:-24px;background:#fff;padding:14px 0;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end;margin-top:auto}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-weight:700;color:#334155}
+.tabs button.on{background:var(--p);color:#fff;border-color:var(--p)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--p);color:#fff;padding:12px 20px;border-radius:12px;font-weight:600;z-index:99;display:none;box-shadow:0 10px 30px -10px rgba(0,0,0,.4)}
+.toast.err{background:var(--red)}
+.warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:12px 16px;border-radius:12px;margin-bottom:16px;font-weight:600}
+.media{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.media .it{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.media img{width:100%;height:110px;object-fit:contain;background:#f8fafc;cursor:pointer}
+.media .it div{padding:8px;display:flex;gap:6px;justify-content:space-between;font-size:12px}
+.leadx{background:#f8fafc;border-radius:10px;padding:12px;margin-top:8px;display:grid;gap:8px}
+.rep{display:grid;gap:10px}
+.rep .row{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px;position:relative}
+.rep .row .x{position:absolute;top:8px;right:8px}
+.lsw{display:flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:#fff}
+.lsw button{border:0;background:none;padding:5px 11px;border-radius:999px;font-weight:700;font-size:12.5px;color:var(--mut)}
+.lsw button.on{background:var(--p);color:#fff}
+.picker{position:fixed;inset:0;background:rgba(2,8,23,.55);z-index:80;display:grid;place-items:center;padding:20px}
+.picker .in{background:#fff;border-radius:16px;padding:20px;width:min(900px,100%);max-height:85vh;overflow:auto}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+/* ================= i18n (admin UI) ================= */
+const L = {
+ en:{dashboard:'Dashboard',leads:'Leads & enquiries',content:'Content',solutions:'Solutions',categories:'Categories',highlights:'Why Baybex',steps:'Process steps',portfolio:'Portfolio',testimonials:'Testimonials',faqs:'FAQ',site:'Website',settings:'Site settings',media:'Media library',system:'System',users:'Admin users',backup:'Backup & restore',logout:'Log out',view_site:'View site',
+  login:'Log in',username:'Username',password:'Password',add:'Add new',edit:'Edit',del:'Delete',save:'Save',cancel:'Cancel',saved:'Saved',deleted:'Deleted',confirm_del:'Delete this item? This cannot be undone.',
+  visible:'Visible',hidden:'Hidden',featured:'Featured',order:'Order',actions:'Actions',title:'Title',category:'Category',status:'Status',
+  total_sol:'Live solutions',new_leads:'New leads',week_leads:'Leads this week',all_leads:'Total leads',recent:'Recent leads',none:'Nothing here yet.',
+  change_pw_warn:'You are using the default password. Please change it now in Admin users.',export:'Export CSV',search:'Search name, phone, company…',all:'All',type:'Type',date:'Date',note:'Internal note',save_note:'Save note',
+  upload:'Upload',choose:'Choose from library',remove:'Remove',copy:'Copy URL',copied:'Copied',
+  add_admin:'Add admin',name:'Name',cur_pw:'Current password',new_pw:'New password',change_pw:'Change password',last_login:'Last login',
+  backup_dl:'Download backup',restore:'Restore from backup',restore_warn:'Restoring replaces all content (admins are kept). Continue?',restored:'Restored',
+  g_general:'General',g_brand:'Branding',g_hero:'Hero',g_about:'About',g_contact:'Contact & social',g_seo:'SEO & scripts',g_sections:'Sections',g_stats:'Stats bar',
+  add_row:'Add row',analytics:'Analytics',posts:'Blog posts',pages:'Landing pages',redirects:'Redirects',g_tracking:'Tracking & analytics',g_local:'Local SEO',
+  view:'View ↗',seo_preview:'Google search preview',md_hint:'Formatting: ## Heading · **bold** · - list item · [link text](/contact) · ![image alt](/uploads/photo.webp)',
+  visitors:'Visitors',pageviews:'Page views',sessions:'Sessions',conv:'Conversion rate',live_now:'Live now',top_pages:'Top pages',referrers:'Referrers',campaigns:'Campaigns (UTM)',
+  devices:'Devices',browsers:'Browsers',os:'Operating systems',languages:'Languages',events:'Events',lead_sources:'Lead sources',entry_pages:'Landing (entry) pages',today:'Today',
+  vs_prev:'vs previous period',seo_tools:'SEO & tracking tools',source:'Source',published_s:'Published',draft:'Draft',refresh:'Refresh',days:'days',chars:'chars',
+  an_off:'Self-hosted analytics is turned off in Site settings → Tracking & analytics.',up:'Move up',down:'Move down',features_hint:'One feature per line. Line 1 in English matches line 1 in Bangla.'},
+ bn:{dashboard:'ড্যাশবোর্ড',leads:'লিড ও অনুসন্ধান',content:'কনটেন্ট',solutions:'সলিউশন',categories:'ক্যাটাগরি',highlights:'কেন বেবেক্স',steps:'কাজের ধাপ',portfolio:'পোর্টফোলিও',testimonials:'গ্রাহকের মতামত',faqs:'প্রশ্নোত্তর',site:'ওয়েবসাইট',settings:'সাইট সেটিংস',media:'মিডিয়া লাইব্রেরি',system:'সিস্টেম',users:'অ্যাডমিন ইউজার',backup:'ব্যাকআপ ও রিস্টোর',logout:'লগ আউট',view_site:'সাইট দেখুন',
+  login:'লগ ইন',username:'ইউজারনেম',password:'পাসওয়ার্ড',add:'নতুন যোগ করুন',edit:'এডিট',del:'মুছুন',save:'সেভ করুন',cancel:'বাতিল',saved:'সেভ হয়েছে',deleted:'মুছে ফেলা হয়েছে',confirm_del:'এটি মুছে ফেলবেন? আর ফেরত আনা যাবে না।',
+  visible:'দৃশ্যমান',hidden:'লুকানো',featured:'ফিচার্ড',order:'ক্রম',actions:'অ্যাকশন',title:'শিরোনাম',category:'ক্যাটাগরি',status:'অবস্থা',
+  total_sol:'চালু সলিউশন',new_leads:'নতুন লিড',week_leads:'এই সপ্তাহের লিড',all_leads:'মোট লিড',recent:'সাম্প্রতিক লিড',none:'এখনো কিছু নেই।',
+  change_pw_warn:'আপনি ডিফল্ট পাসওয়ার্ড ব্যবহার করছেন। অ্যাডমিন ইউজার থেকে এখনই পরিবর্তন করুন।',export:'CSV এক্সপোর্ট',search:'নাম, ফোন, প্রতিষ্ঠান খুঁজুন…',all:'সব',type:'ধরন',date:'তারিখ',note:'অভ্যন্তরীণ নোট',save_note:'নোট সেভ',
+  upload:'আপলোড',choose:'লাইব্রেরি থেকে বাছুন',remove:'সরান',copy:'URL কপি',copied:'কপি হয়েছে',
+  add_admin:'অ্যাডমিন যোগ করুন',name:'নাম',cur_pw:'বর্তমান পাসওয়ার্ড',new_pw:'নতুন পাসওয়ার্ড',change_pw:'পাসওয়ার্ড পরিবর্তন',last_login:'শেষ লগইন',
+  backup_dl:'ব্যাকআপ ডাউনলোড',restore:'ব্যাকআপ থেকে রিস্টোর',restore_warn:'রিস্টোর করলে সব কনটেন্ট বদলে যাবে (অ্যাডমিন থাকবে)। চালিয়ে যাবেন?',restored:'রিস্টোর হয়েছে',
+  g_general:'সাধারণ',g_brand:'ব্র্যান্ডিং',g_hero:'হিরো',g_about:'আমাদের সম্পর্কে',g_contact:'যোগাযোগ ও সোশ্যাল',g_seo:'SEO ও স্ক্রিপ্ট',g_sections:'সেকশন',g_stats:'পরিসংখ্যান',
+  add_row:'সারি যোগ',analytics:'অ্যানালিটিক্স',posts:'ব্লগ পোস্ট',pages:'ল্যান্ডিং পেজ',redirects:'রিডাইরেক্ট',g_tracking:'ট্র্যাকিং ও অ্যানালিটিক্স',g_local:'লোকাল SEO',
+  view:'দেখুন ↗',seo_preview:'গুগল সার্চ প্রিভিউ',md_hint:'ফরম্যাট: ## শিরোনাম · **বোল্ড** · - তালিকা · [লিংকের লেখা](/contact) · ![ছবির বিবরণ](/uploads/photo.webp)',
+  visitors:'ভিজিটর',pageviews:'পেজ ভিউ',sessions:'সেশন',conv:'কনভার্সন রেট',live_now:'এখন সাইটে',top_pages:'জনপ্রিয় পেজ',referrers:'রেফারার',campaigns:'ক্যাম্পেইন (UTM)',
+  devices:'ডিভাইস',browsers:'ব্রাউজার',os:'অপারেটিং সিস্টেম',languages:'ভাষা',events:'ইভেন্ট',lead_sources:'লিডের উৎস',entry_pages:'প্রবেশের পেজ',today:'আজ',
+  vs_prev:'আগের সময়ের তুলনায়',seo_tools:'SEO ও ট্র্যাকিং টুল',source:'উৎস',published_s:'প্রকাশিত',draft:'খসড়া',refresh:'রিফ্রেশ',days:'দিন',chars:'অক্ষর',
+  an_off:'সাইট সেটিংস → ট্র্যাকিং ও অ্যানালিটিক্স থেকে সেলফ-অ্যানালিটিক্স বন্ধ করা আছে।',up:'উপরে',down:'নিচে',features_hint:'প্রতি লাইনে একটি ফিচার। ইংরেজির ১ নম্বর লাইন বাংলার ১ নম্বর লাইনের সাথে মিলবে।'}
+};
+let AL = localStorage.getItem('bx_admin_lang') || 'en';
+const T = k => (L[AL]||L.en)[k] || L.en[k] || k;
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const bt = o => (o&&typeof o==='object') ? (o[AL]||o.en||o.bn||'') : (o||'');
+const $ = (s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function toast(m,err){const t=$('#toast');t.textContent=m;t.className='toast'+(err?' err':'');t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2600);}
+async function api(path,opt={}){
+  const r = await fetch('/api/admin'+path,{credentials:'same-origin',headers:opt.body&&!(opt.body instanceof FormData)?{'Content-Type':'application/json'}:{},...opt,body:opt.body&&!(opt.body instanceof FormData)?JSON.stringify(opt.body):opt.body});
+  if(r.status===401 && path!=='/login'){ me=null; renderLogin(); throw new Error('auth'); }
+  const j = await r.json().catch(()=>({}));
+  if(!r.ok){ toast(j.error||'Error',true); throw new Error(j.error); }
+  return j;
+}
+
+/* ================= Schemas ================= */
+const ICONS='Emoji icon e.g. 💊 🛒 🤖';
+const SCHEMA = {
+  solutions:{title:x=>bt(x.name),sub:x=>bt((DB.categories.find(c=>c.id===x.category)||{}).name),fields:[
+    {k:'category',type:'select',label:'category',opts:()=>DB.categories.map(c=>[c.id,bt(c.name)])},
+    {k:'icon',type:'text',label:'Icon',ph:ICONS},
+    {k:'name',type:'bi',label:'Name / নাম'},
+    {k:'short',type:'bitext',label:'Short description / সংক্ষিপ্ত বিবরণ'},
+    {k:'description',type:'bimd',label:'Full description / বিস্তারিত বিবরণ',rows:8},
+    {k:'features',type:'bilist',label:'Features / ফিচার'},
+    {k:'price',type:'bi',label:'Price text / মূল্য'},
+    {k:'priceValue',type:'number',label:'Price in BDT for Google (optional, 0 = hide)',def:0},
+    {k:'badge',type:'bi',label:'Badge (optional) e.g. New, Coming soon'},
+    {k:'image',type:'image',label:'Cover image (optional)'},
+    {k:'gallery',type:'gallery',label:'Screenshots / gallery'},
+    {k:'demoUrl',type:'text',label:'Live demo URL (optional)',ph:'https://'},
+    {k:'slug',type:'text',label:'URL slug (changing it adds a 301 redirect automatically)',ph:'auto'},
+    {k:'featured',type:'bool',label:'featured'},
+    {k:'visible',type:'bool',label:'visible',def:true},
+    {k:'seoTitle',type:'bi',label:'SEO title (optional, ≤ 60 chars)',max:60},
+    {k:'seoDescription',type:'bitext',label:'Meta description (optional, ≤ 160 chars)',max:160,rows:2}]},
+  categories:{title:x=>(x.icon||'')+' '+bt(x.name),sub:x=>'id: '+x.id,fields:[
+    {k:'id',type:'text',label:'ID (English, no spaces) — only when creating',createOnly:true,ph:'e.g. erp'},
+    {k:'icon',type:'text',label:'Icon',ph:ICONS},{k:'name',type:'bi',label:'Name / নাম'},
+    {k:'description',type:'bitext',label:'Category page intro / বিবরণ'},
+    {k:'seoTitle',type:'bi',label:'SEO title (optional, ≤ 60 chars)',max:60},
+    {k:'seoDescription',type:'bitext',label:'Meta description (optional, ≤ 160 chars)',max:160,rows:2}]},
+  highlights:{title:x=>(x.icon||'')+' '+bt(x.title),fields:[{k:'icon',type:'text',label:'Icon',ph:ICONS},{k:'title',type:'bi',label:'Title / শিরোনাম'},{k:'text',type:'bitext',label:'Text / লেখা'},{k:'visible',type:'bool',label:'visible',def:true}]},
+  steps:{title:x=>bt(x.title),fields:[{k:'title',type:'bi',label:'Title / শিরোনাম'},{k:'text',type:'bitext',label:'Text / লেখা'},{k:'visible',type:'bool',label:'visible',def:true}]},
+  portfolio:{title:x=>bt(x.title),sub:x=>x.url||'',fields:[{k:'title',type:'bi',label:'Project name / প্রজেক্টের নাম'},{k:'text',type:'bitext',label:'Description / বিবরণ'},{k:'image',type:'image',label:'Image'},{k:'url',type:'text',label:'Link (optional)',ph:'https://'},{k:'visible',type:'bool',label:'visible',def:true}]},
+  testimonials:{title:x=>bt(x.name),sub:x=>bt(x.role),fields:[{k:'name',type:'bi',label:'Client name / নাম'},{k:'role',type:'bi',label:'Business / role'},{k:'text',type:'bitext',label:'Review / মতামত'},{k:'photo',type:'image',label:'Photo'},{k:'rating',type:'number',label:'Rating (1–5)',def:5},{k:'visible',type:'bool',label:'visible',def:true}]},
+  posts:{title:x=>bt(x.title),sub:x=>(x.publishedAt||'')+' · /blog/'+x.slug,visKey:'published',sortBy:x=>x.publishedAt||'',desc:true,fields:[
+    {k:'title',type:'bi',label:'Title / শিরোনাম (H1)'},
+    {k:'excerpt',type:'bitext',label:'Short summary / সারসংক্ষেপ',rows:2},
+    {k:'content',type:'bimd',label:'Article / লেখা',rows:16},
+    {k:'cover',type:'image',label:'Cover image (1200×630 recommended)'},
+    {k:'publishedAt',type:'date',label:'Publish date'},
+    {k:'slug',type:'text',label:'URL slug (English words, e.g. best-pos-software-bangladesh)',ph:'auto'},
+    {k:'published',type:'bool',label:'published_s',def:true},
+    {k:'seoTitle',type:'bi',label:'SEO title (optional, ≤ 60 chars)',max:60},
+    {k:'seoDescription',type:'bitext',label:'Meta description (optional, ≤ 160 chars)',max:160,rows:2}]},
+  pages:{title:x=>bt(x.title),sub:x=>'/'+x.slug,fields:[
+    {k:'title',type:'bi',label:'Title / শিরোনাম (H1) — e.g. E-commerce Website Development in Rangpur'},
+    {k:'intro',type:'bitext',label:'Intro / ভূমিকা',rows:2},
+    {k:'content',type:'bimd',label:'Page content / কনটেন্ট',rows:16},
+    {k:'image',type:'image',label:'Image (optional)'},
+    {k:'slug',type:'text',label:'URL slug (e.g. ecommerce-website-rangpur)',ph:'auto'},
+    {k:'showForm',type:'bool',label:'Show demo request form beside content',def:true},
+    {k:'inFooter',type:'bool',label:'Link in footer',def:false},
+    {k:'visible',type:'bool',label:'visible',def:true},
+    {k:'seoTitle',type:'bi',label:'SEO title (optional, ≤ 60 chars)',max:60},
+    {k:'seoDescription',type:'bitext',label:'Meta description (optional, ≤ 160 chars)',max:160,rows:2}]},
+  redirects:{title:x=>x.from+'  →  '+(x.code==='410'?'410 Gone':x.to),sub:x=>x.code,fields:[
+    {k:'from',type:'text',label:'Old path (e.g. /old-page)',ph:'/old-page'},
+    {k:'to',type:'text',label:'New path or URL (empty for 410)',ph:'/solutions/pharmacy-erp'},
+    {k:'code',type:'select',label:'Type',opts:()=>[['301','301 Permanent'],['302','302 Temporary'],['410','410 Gone (deleted)']]}]},
+  faqs:{title:x=>bt(x.q),fields:[{k:'q',type:'bi',label:'Question / প্রশ্ন'},{k:'a',type:'bitext',label:'Answer / উত্তর'},{k:'visible',type:'bool',label:'visible',def:true}]},
+};
+const SETTINGS = [
+  ['g_general',[{k:'siteName',type:'text',label:'Site name'},{k:'defaultLang',type:'select',label:'Default language (shown at /, the other language lives under /en or /bn)',opts:()=>[['bn','বাংলা'],['en','English']]},{k:'tagline',type:'bi',label:'Tagline'},{k:'announcement',type:'bi',label:'Top announcement bar (leave empty to hide)'},{k:'footerText',type:'bitext',label:'Footer text'}]],
+  ['g_brand',[{k:'logo',type:'image',label:'Logo (header) — PNG/SVG, transparent background recommended'},{k:'logoDark',type:'image',label:'Logo for dark footer (optional, white version)'},{k:'favicon',type:'image',label:'Favicon (square)'},{k:'primaryColor',type:'color',label:'Primary colour (navy)'},{k:'accentColor',type:'color',label:'Accent colour (teal)'}]],
+  ['g_hero',[{k:'heroBadge',type:'bi',label:'Small badge above title'},{k:'heroTitle',type:'bitext',label:'Headline'},{k:'heroSubtitle',type:'bitext',label:'Sub-headline'},{k:'heroCta',type:'bi',label:'Button 1 text'},{k:'heroCta2',type:'bi',label:'Button 2 text'},{k:'heroImage',type:'image',label:'Hero image (optional — otherwise featured solutions are shown)'}]],
+  ['g_stats',[{k:'stats',type:'repeater',label:'Stats',sub:[{k:'value',type:'bi',label:'Value e.g. 15+'},{k:'label',type:'bi',label:'Label'}]}]],
+  ['g_about',[{k:'aboutTitle',type:'bi',label:'About title'},{k:'about',type:'bitext',label:'About text',rows:6}]],
+  ['g_contact',[{k:'phone',type:'text',label:'Phone'},{k:'whatsapp',type:'text',label:'WhatsApp number with country code',ph:'8801XXXXXXXXX'},{k:'email',type:'text',label:'Email'},{k:'address',type:'bi',label:'Address'},{k:'officeHours',type:'bi',label:'Office hours'},{k:'facebook',type:'text',label:'Facebook URL'},{k:'youtube',type:'text',label:'YouTube URL'},{k:'linkedin',type:'text',label:'LinkedIn URL'},{k:'instagram',type:'text',label:'Instagram URL'}]],
+  ['g_seo',[{k:'seoTitle',type:'bi',label:'Home page SEO title (≤ 60 chars)',max:60},{k:'seoDescription',type:'bitext',label:'Home page meta description (≤ 160 chars)',max:160},{k:'ogImage',type:'image',label:'Default social share image (1200×630)'}]],
+  ['g_tracking',[{k:'selfAnalytics',type:'bool',label:'Built-in analytics (privacy-friendly, stored in your PostgreSQL)',def:true},
+    {k:'ga4Id',type:'text',label:'Google Analytics 4 — Measurement ID',ph:'G-XXXXXXXXXX'},
+    {k:'gtmId',type:'text',label:'Google Tag Manager — Container ID (optional)',ph:'GTM-XXXXXXX'},
+    {k:'metaPixelId',type:'text',label:'Meta (Facebook) Pixel ID',ph:'123456789012345'},
+    {k:'metaCapiToken',type:'text',label:'Meta Conversions API access token (optional — sends Lead/Contact/ViewContent server-side, deduplicated with the Pixel)'},
+    {k:'metaTestEventCode',type:'text',label:'Meta test event code (only while testing, then clear it)',ph:'TEST12345'},
+    {k:'gscVerification',type:'text',label:'Google Search Console verification code (content of the meta tag)'},
+    {k:'bingVerification',type:'text',label:'Bing Webmaster verification code (msvalidate.01)'},
+    {k:'fbDomainVerification',type:'text',label:'Facebook domain verification code'},
+    {k:'headScripts',type:'textarea',label:'Extra code inside <head>',rows:5},{k:'bodyScripts',type:'textarea',label:'Extra code before </body>',rows:5}]],
+  ['g_local',[{k:'businessType',type:'select',label:'Business type (schema.org)',opts:()=>[['ProfessionalService','ProfessionalService'],['LocalBusiness','LocalBusiness'],['Store','Store'],['ComputerStore','ComputerStore']]},
+    {k:'legalName',type:'text',label:'Legal business name'},{k:'streetAddress',type:'text',label:'Street address'},{k:'city',type:'text',label:'City'},{k:'region',type:'text',label:'Division / region'},
+    {k:'postalCode',type:'text',label:'Postal code'},{k:'country',type:'text',label:'Country code',ph:'BD'},{k:'latitude',type:'text',label:'Latitude',ph:'23.8103'},{k:'longitude',type:'text',label:'Longitude',ph:'90.4125'},
+    {k:'mapEmbedUrl',type:'text',label:'Google Maps embed URL (Share → Embed a map → copy the src link)',ph:'https://www.google.com/maps/embed?pb=...'},
+    {k:'priceRange',type:'text',label:'Price range',ph:'৳৳'},{k:'openingHoursSchema',type:'text',label:'Opening hours (schema format)',ph:'Sa,Su,Mo,Tu,We,Th 10:00-20:00'},
+    {k:'areaServed',type:'text',label:'Area served',ph:'Bangladesh'}]],
+  ['g_sections',[{k:'sections',type:'sections',label:'Show / hide sections'}]],
+];
+const SECTION_KEYS=['solutions','highlights','steps','about','portfolio','testimonials','blog','faq','contact'];
+
+/* ================= Field rendering ================= */
+function F(f, v, id){
+  const lab = T(f.label);
+  const n = `data-k="${f.k}"`;
+  if(f.type==='bool') return `<label class="chk"><input type="checkbox" ${n} data-t="bool" ${(v===undefined?f.def:v)?'checked':''}> ${esc(lab)}</label>`;
+  let inner='';
+  switch(f.type){
+    case 'text': inner=`<input ${n} data-t="text" value="${esc(v)}" placeholder="${esc(f.ph||'')}">`; break;
+    case 'number': inner=`<input type="number" ${n} data-t="number" value="${esc(v===undefined?f.def:v)}">`; break;
+    case 'color': inner=`<div style="display:flex;gap:10px"><input type="color" ${n} data-t="text" value="${esc(v||'#000000')}" oninput="this.nextElementSibling.value=this.value"><input value="${esc(v||'')}" oninput="this.previousElementSibling.value=this.value" style="max-width:140px"></div>`; break;
+    case 'textarea': inner=`<textarea ${n} data-t="text" rows="${f.rows||4}" style="font-family:monospace;font-size:13px">${esc(v)}</textarea>`; break;
+    case 'select': inner=`<select ${n} data-t="text">${f.opts().map(([a,b])=>`<option value="${esc(a)}" ${a===v?'selected':''}>${esc(b)}</option>`).join('')}</select>`; break;
+    case 'bi': { const mx=f.max?` data-max="${f.max}"`:''; const ct=f.max?'<small class="cnt"></small>':''; inner=`<div class="bi" ${n} data-t="bi"><div><small>ENGLISH</small><input data-l="en"${mx} value="${esc(v&&v.en)}">${ct}</div><div><small>বাংলা</small><input data-l="bn"${mx} value="${esc(v&&v.bn)}">${ct}</div></div>`; break; }
+    case 'bitext': case 'bimd': { const mx=f.max?` data-max="${f.max}"`:''; const ct=f.max?'<small class="cnt"></small>':''; const mono=f.type==='bimd'?' style="font-size:13.5px;line-height:1.5"':''; inner=`<div class="bi" ${n} data-t="bi"><div><small>ENGLISH</small><textarea data-l="en"${mx}${mono} rows="${f.rows||3}">${esc(v&&v.en)}</textarea>${ct}</div><div><small>বাংলা</small><textarea data-l="bn"${mx}${mono} rows="${f.rows||3}">${esc(v&&v.bn)}</textarea>${ct}</div></div>${f.type==='bimd'?`<small class="mut">${esc(T('md_hint'))}</small>`:''}`; break; }
+    case 'date': inner=`<input type="date" ${n} data-t="text" value="${esc(v||new Date().toISOString().slice(0,10))}">`; break;
+    case 'bilist': { const a=Array.isArray(v)?v:[]; inner=`<div class="bi" ${n} data-t="bilist"><div><small>ENGLISH</small><textarea data-l="en" rows="7">${esc(a.map(x=>x.en||'').join('\n'))}</textarea></div><div><small>বাংলা</small><textarea data-l="bn" rows="7">${esc(a.map(x=>x.bn||'').join('\n'))}</textarea></div></div><small class="mut">${T('features_hint')}</small>`; break; }
+    case 'image': inner=`<div class="img" ${n} data-t="image"><img class="pv" src="${esc(v||'/assets/favicon.png')}" style="${v?'':'opacity:.25'}"><input value="${esc(v)}" placeholder="/uploads/… or https://" oninput="this.previousElementSibling.src=this.value||'/assets/favicon.png'"><label class="btn sm">${T('upload')}<input type="file" accept="image/*" hidden data-up></label><button type="button" class="btn sm" data-pick>${T('choose')}</button><button type="button" class="btn sm dn" data-clr>✕</button></div>`; break;
+    case 'gallery': inner=`<div ${n} data-t="gallery"><div class="gal">${(v||[]).map(g=>`<div data-u="${esc(g)}"><img src="${esc(g)}"><button type="button" data-rm>×</button></div>`).join('')}</div><div style="margin-top:8px;display:flex;gap:8px"><label class="btn sm">${T('upload')}<input type="file" accept="image/*" multiple hidden data-upg></label><button type="button" class="btn sm" data-pickg>${T('choose')}</button></div></div>`; break;
+    case 'sections': inner=`<div ${n} data-t="sections" style="display:grid;gap:10px">${SECTION_KEYS.map(s=>`<label class="chk"><input type="checkbox" data-s="${s}" ${!v||v[s]!==false?'checked':''}> ${esc(T(s==='faq'?'faqs':s==='contact'?'Contact':s==='about'?'g_about':s==='blog'?'posts':s))}</label>`).join('')}</div>`; break;
+    case 'repeater': inner=`<div ${n} data-t="repeater" class="rep">${(v||[]).map(r=>repRow(f,r)).join('')}</div><button type="button" class="btn sm" data-addrow style="justify-self:start">+ ${T('add_row')}</button>`; break;
+  }
+  return `<div class="f"><span>${esc(lab)}</span>${inner}</div>`;
+}
+function repRow(f,r){ return `<div class="row"><button type="button" class="btn sm dn x" data-rmrow>✕</button>${f.sub.map(s=>F(s,r&&r[s.k])).join('')}</div>`; }
+function readField(el){
+  const t=el.dataset.t;
+  if(t==='bool') return el.checked;
+  if(t==='number') return Number(el.value)||0;
+  if(t==='text') return el.value.trim();
+  if(t==='bi') return {en:$('[data-l=en]',el).value.trim(),bn:$('[data-l=bn]',el).value.trim()};
+  if(t==='bilist'){ const en=$('[data-l=en]',el).value.split('\n'),bn=$('[data-l=bn]',el).value.split('\n'); const n=Math.max(en.length,bn.length),o=[]; for(let i=0;i<n;i++){const a=(en[i]||'').trim(),b=(bn[i]||'').trim(); if(a||b)o.push({en:a,bn:b});} return o; }
+  if(t==='image') return $('input:not([type=file])',el).value.trim();
+  if(t==='gallery') return $$('.gal>div',el).map(d=>d.dataset.u);
+  if(t==='sections'){ const o={}; $$('[data-s]',el).forEach(c=>o[c.dataset.s]=c.checked); return o; }
+  if(t==='repeater') return $$(':scope>.row',el).map(row=>{ const o={}; $$('[data-k]',row).forEach(x=>o[x.dataset.k]=readField(x)); return o; });
+}
+function readForm(root){ const o={}; $$('[data-k]',root).forEach(el=>{ if(el.closest('[data-t=repeater]') && el.closest('[data-t=repeater]')!==el) return; o[el.dataset.k]=readField(el); }); return o; }
+async function uploadFile(file){ const fd=new FormData(); fd.append('file',file); const r=await api('/upload',{method:'POST',body:fd}); return r.url; }
+function updCount(el){ const c=el.nextElementSibling; if(!c||!c.classList.contains('cnt'))return; const n=el.value.length,m=+el.dataset.max; c.textContent=n+' / '+m+' '+T('chars'); c.style.color=n>m?'#dc2626':n>m*0.5?'#059669':'#94a3b8'; }
+function wireFields(root, schemaFields){
+  $$('[data-max]',root).forEach(updCount);
+  root.addEventListener('input', e=>{ if(e.target.dataset&&e.target.dataset.max) updCount(e.target); });
+  root.addEventListener('change', async e=>{
+    if(e.target.matches('[data-up]')){ const box=e.target.closest('[data-t=image]'); const f=e.target.files[0]; if(!f)return; const url=await uploadFile(f); setImg(box,url); toast(T('saved')); }
+    if(e.target.matches('[data-upg]')){ const box=e.target.closest('[data-t=gallery]'); for(const f of e.target.files){ const url=await uploadFile(f); addGal(box,url);} }
+  });
+  root.addEventListener('click', e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    if(b.matches('[data-clr]')) setImg(b.closest('[data-t=image]'),'');
+    if(b.matches('[data-pick]')) pickMedia(u=>setImg(b.closest('[data-t=image]'),u));
+    if(b.matches('[data-pickg]')) pickMedia(u=>addGal(b.closest('[data-t=gallery]'),u));
+    if(b.matches('[data-rm]')) b.parentElement.remove();
+    if(b.matches('[data-rmrow]')) b.closest('.row').remove();
+    if(b.matches('[data-addrow]')){ const rep=b.parentElement.querySelector(':scope > [data-t=repeater]'); const f=(schemaFields||[]).find(x=>x.k===rep.dataset.k); rep.insertAdjacentHTML('beforeend',repRow(f,{})); }
+  });
+}
+function setImg(box,u){ $('input:not([type=file])',box).value=u; const p=$('.pv',box); p.src=u||'/assets/favicon.png'; p.style.opacity=u?1:.25; }
+function addGal(box,u){ $('.gal',box).insertAdjacentHTML('beforeend',`<div data-u="${esc(u)}"><img src="${esc(u)}"><button type="button" data-rm>×</button></div>`); }
+async function pickMedia(cb){
+  const files=await api('/uploads');
+  const d=document.createElement('div'); d.className='picker';
+  d.innerHTML=`<div class="in"><div class="top"><h2>${T('media')}</h2><button class="btn" data-x>✕</button></div>${files.length?`<div class="media">${files.map(f=>`<div class="it"><img src="${esc(f.url)}" data-u="${esc(f.url)}"></div>`).join('')}</div>`:`<p class="mut">${T('none')}</p>`}</div>`;
+  document.body.appendChild(d);
+  d.onclick=e=>{ if(e.target===d||e.target.closest('[data-x]')) d.remove(); const u=e.target.dataset.u; if(u){ cb(u); d.remove(); } };
+}
+
+/* ================= App state ================= */
+let me=null, DB=null, view='dashboard', leadFilter={q:'',status:'',type:''}, setTab=0;
+async function load(){ DB = await api('/data'); }
+
+function renderLogin(){
+  document.documentElement.lang=AL;
+  $('#root').innerHTML=`<div class="login"><form id="lf"><h1><img src="/assets/logo-horizontal.png" alt="Baybex" style="width:auto;height:44px"> <span style="font-size:15px;color:#64748b;font-weight:600">Admin</span></h1>
+    <label class="f">${T('username')}<input name="username" autocomplete="username" required></label>
+    <label class="f">${T('password')}<input name="password" type="password" autocomplete="current-password" required></label>
+    <button class="btn pr" style="justify-content:center">${T('login')}</button>
+    <div class="lsw" style="justify-self:center"><button type="button" data-al="en" class="${AL==='en'?'on':''}">EN</button><button type="button" data-al="bn" class="${AL==='bn'?'on':''}">বাং</button></div></form></div>`;
+  $$('[data-al]').forEach(b=>b.onclick=()=>{AL=b.dataset.al;localStorage.setItem('bx_admin_lang',AL);renderLogin();});
+  $('#lf').onsubmit=async e=>{ e.preventDefault(); const fd=Object.fromEntries(new FormData(e.target));
+    try{ const r=await api('/login',{method:'POST',body:fd}); me=await api('/me'); await load(); view=r.mustChange?'users':'dashboard'; shell(); }catch(_){} };
+}
+
+const NAV=[['dashboard','📊'],['analytics','📈'],['leads','📥'],['#content'],['solutions','🧩'],['categories','🗂️'],['posts','📝'],['pages','📄'],['highlights','⭐'],['steps','🪜'],['portfolio','🖼️'],['testimonials','💬'],['faqs','❓'],['#site'],['settings','⚙️'],['media','📁'],['redirects','↪️'],['#system'],['users','👤'],['backup','💾']];
+function shell(){
+  document.documentElement.lang=AL;
+  const newCount=DB.leads.filter(l=>l.status==='new').length;
+  $('#root').innerHTML=`<div class="layout"><aside id="side"><div class="brand"><img src="${esc(DB.settings.logoDark||'/assets/logo-horizontal-white.png')}" alt="Baybex" style="width:auto;height:38px"></div><nav>
+    ${NAV.map(([k,i])=>k[0]==='#'?`<div class="grp">${T(k.slice(1))}</div>`:`<button data-v="${k}" class="${view===k?'on':''}">${i} ${T(k)}${k==='leads'&&newCount?`<span class="nb">${newCount}</span>`:''}</button>`).join('')}
+    <div class="grp"></div><button onclick="window.open('/','_blank','noopener')">🌐 ${T('view_site')}</button><button id="lo">🚪 ${T('logout')}</button></nav></aside>
+    <main><div class="top"><button class="burger" id="bg">☰</button><h2>${T(view)}</h2><span id="acts" style="display:flex;gap:8px;flex-wrap:wrap"></span>
+    <div class="lsw"><button data-al="en" class="${AL==='en'?'on':''}">EN</button><button data-al="bn" class="${AL==='bn'?'on':''}">বাং</button></div>
+    <span class="mut">👤 ${esc(me.username)}</span></div>
+    ${me.mustChange?`<div class="warn">⚠️ ${T('change_pw_warn')}</div>`:''}<div id="view"></div></main></div>
+    <div class="drawer" id="drawer"><div class="in" id="din"></div></div>`;
+  $$('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;$('#side').classList.remove('open');shell();});
+  $$('[data-al]').forEach(b=>b.onclick=()=>{AL=b.dataset.al;localStorage.setItem('bx_admin_lang',AL);shell();});
+  $('#bg').onclick=()=>$('#side').classList.toggle('open');
+  $('#lo').onclick=async()=>{await api('/logout',{method:'POST'});me=null;renderLogin();};
+  $('#drawer').onclick=e=>{ if(e.target.id==='drawer') closeDrawer(); };
+  ({dashboard:vDash,analytics:vAnalytics,leads:vLeads,settings:vSettings,media:vMedia,users:vUsers,backup:vBackup}[view]||vCollection)();
+}
+const fmt = d => d ? new Date(d).toLocaleString(AL==='bn'?'bn-BD':'en-GB',{dateStyle:'medium',timeStyle:'short'}) : '—';
+
+/* ================= Views ================= */
+function vDash(){
+  const wk=Date.now()-7*864e5;
+  const recent=DB.leads.slice(0,6);
+  $('#view').innerHTML=`<div class="kpis">
+    <div class="kpi"><b>${DB.solutions.filter(s=>s.visible!==false).length}<small class="mut" style="font-size:14px"> / ${DB.solutions.length}</small></b><span>${T('total_sol')}</span></div>
+    <div class="kpi"><b>${DB.leads.filter(l=>l.status==='new').length}</b><span>${T('new_leads')}</span></div>
+    <div class="kpi"><b>${DB.leads.filter(l=>new Date(l.createdAt)>wk).length}</b><span>${T('week_leads')}</span></div>
+    <div class="kpi"><b>${DB.leads.length}</b><span>${T('all_leads')}</span></div></div>
+    <div class="panel"><h3>${T('recent')}</h3>${recent.length?`<div class="tbl"><table><tr><th>${T('date')}</th><th>${T('name')}</th><th>Phone</th><th>${T('solutions')}</th><th>${T('status')}</th></tr>
+    ${recent.map(l=>`<tr><td>${fmt(l.createdAt)}</td><td><b>${esc(l.name)}</b><div class="mut">${esc(l.company)}</div></td><td><a href="tel:${esc(l.phone)}">${esc(l.phone)}</a></td><td>${esc(l.solution||'—')}</td><td><span class="chip ${esc(l.status)}">${esc(l.status)}</span></td></tr>`).join('')}</table></div>`:`<p class="mut">${T('none')}</p>`}</div>
+    <div class="panel"><h3>${T('content')}</h3><div style="display:flex;gap:10px;flex-wrap:wrap">${['analytics','solutions','posts','pages','categories','faqs','settings'].map(k=>`<button class="btn" data-go="${k}">${T(k)} →</button>`).join('')}</div></div>
+    <div class="panel"><h3>${T('seo_tools')}</h3><div style="display:flex;gap:10px;flex-wrap:wrap">${[
+      ['Google Search Console','https://search.google.com/search-console'],['PageSpeed Insights','https://pagespeed.web.dev/analysis?url='+encodeURIComponent(DB.siteUrl+'/')],
+      ['Rich Results Test','https://search.google.com/test/rich-results?url='+encodeURIComponent(DB.siteUrl+'/')],['Bing Webmaster','https://www.bing.com/webmasters'],
+      ['Google Analytics','https://analytics.google.com'],['Meta Events Manager','https://business.facebook.com/events_manager2'],['Google Business Profile','https://business.google.com'],
+      ['sitemap.xml','/sitemap.xml'],['robots.txt','/robots.txt']].map(([n,u])=>`<a class="btn" target="_blank" rel="noopener" href="${esc(u)}">${esc(n)} ↗</a>`).join('')}</div></div>`;
+  $$('[data-go]').forEach(b=>b.onclick=()=>{view=b.dataset.go;shell();});
+}
+
+let anDays=30;
+async function vAnalytics(){
+  $('#acts').innerHTML=[1,7,30,90].map(d=>`<button class="btn sm ${d===anDays?'dk':''}" data-ad="${d}">${d===1?T('today'):d+' '+T('days')}</button>`).join('')+`<button class="btn sm" id="arf">⟳ ${T('refresh')}</button>`;
+  $$('[data-ad]').forEach(b=>b.onclick=()=>{anDays=+b.dataset.ad;vAnalytics();}); $('#arf').onclick=()=>vAnalytics();
+  $('#view').innerHTML='<div class="panel mut">…</div>';
+  const a=await api('/analytics?days='+anDays);
+  const pct=(n,p)=>{ if(!p) return ''; const d=Math.round((n-p)/p*100); return `<span class="delta ${d>=0?'up':'down'}">${d>=0?'▲':'▼'} ${Math.abs(d)}%</span>`; };
+  const cv=a.totals.uv?(a.totals.leads/a.totals.uv*100).toFixed(1):'0.0';
+  const max=Math.max(1,...a.series.map(x=>x.pv)); const W=Math.max(a.series.length,1);
+  const bars=a.series.map((x,i)=>{ const h=x.pv/max*150, h2=x.uv/max*150, bw=Math.max(2,600/W-3), xx=i*(600/W);
+    return `<g><title>${x.d}: ${x.pv} ${T('pageviews')}, ${x.uv} ${T('visitors')}</title><rect x="${xx}" y="${170-h}" width="${bw}" height="${h}" rx="2" fill="#cbd5e1"/><rect x="${xx}" y="${170-h2}" width="${bw}" height="${h2}" rx="2" fill="var(--a)"/></g>`; }).join('');
+  const tbl=(title,rows,cols,fmtRow)=>`<div class="panel"><h3>${title}</h3>${rows.length?`<div class="tbl"><table>${rows.map(fmtRow).join('')}</table></div>`:`<p class="mut">${T('none')}</p>`}</div>`;
+  const barRow=(label,n,tot)=>`<tr><td style="max-width:280px;overflow:hidden;text-overflow:ellipsis">${label}</td><td style="width:45%"><div class="bar"><i style="width:${Math.round(n/Math.max(1,tot)*100)}%"></i><b>${n}</b></div></td></tr>`;
+  const sum=(r)=>r.reduce((s,x)=>s+(x.n||x.pv||0),0);
+  $('#view').innerHTML=`${DB.settings.selfAnalytics===false?`<div class="warn">${T('an_off')}</div>`:''}
+  <div class="kpis">
+    <div class="kpi"><b>${a.totals.uv}</b><span>${T('visitors')} ${pct(a.totals.uv,a.previous.uv)}</span></div>
+    <div class="kpi"><b>${a.totals.pv}</b><span>${T('pageviews')} ${pct(a.totals.pv,a.previous.pv)}</span></div>
+    <div class="kpi"><b>${a.totals.ss}</b><span>${T('sessions')}</span></div>
+    <div class="kpi"><b>${a.totals.leads}</b><span>${T('leads')} ${pct(a.totals.leads,a.previous.leads)}</span></div>
+    <div class="kpi"><b>${cv}%</b><span>${T('conv')}</span></div>
+    <div class="kpi"><b style="color:#059669">● ${a.live}</b><span>${T('live_now')}</span></div></div>
+  <div class="panel"><h3>${T('pageviews')} / ${T('visitors')} <small class="mut" style="font-weight:500">(${T('vs_prev')}: ▲▼)</small></h3>
+    <svg viewBox="0 0 600 190" style="width:100%;height:220px">${bars}<line x1="0" y1="170.5" x2="600" y2="170.5" stroke="#e5e9f0"/>
+    <text x="0" y="186" font-size="10" fill="#94a3b8">${a.series[0]?a.series[0].d:''}</text><text x="600" y="186" font-size="10" fill="#94a3b8" text-anchor="end">${a.series.length?a.series[a.series.length-1].d:''}</text></svg>
+    <div class="mut" style="font-size:12.5px"><span style="color:var(--a)">■</span> ${T('visitors')} &nbsp; <span style="color:#cbd5e1">■</span> ${T('pageviews')}</div></div>
+  <div class="agrid">
+    ${tbl(T('top_pages'),a.pages,0,r=>`<tr><td><a href="${esc(r.path)}" target="_blank">${esc(r.path)}</a><div class="mut" style="font-size:12px">${esc(r.title||'')}</div></td><td style="text-align:right"><b>${r.pv}</b><div class="mut" style="font-size:12px">${r.uv} ${T('visitors')}</div></td></tr>`)}
+    ${tbl(T('entry_pages'),a.entryPages,0,r=>barRow(`<a href="${esc(r.path)}" target="_blank">${esc(r.path)}</a>`,r.n,sum(a.entryPages)))}
+    ${tbl(T('referrers'),a.refs,0,r=>barRow(esc(r.ref),r.n,sum(a.refs)))}
+    ${tbl(T('campaigns'),a.utm,0,r=>barRow(`<b>${esc(r.s)}</b> / ${esc(r.m||'—')}<div class="mut" style="font-size:12px">${esc(r.c||'')}</div>`,r.n,sum(a.utm)))}
+    ${tbl(T('lead_sources'),a.leadSources,0,r=>barRow(esc(r.k),r.n,sum(a.leadSources)))}
+    ${tbl(T('events'),a.events,0,r=>barRow(esc(r.k),r.n,sum(a.events)))}
+    ${tbl(T('devices'),a.devices,0,r=>barRow(esc(r.k),r.n,sum(a.devices)))}
+    ${tbl(T('browsers'),a.browsers,0,r=>barRow(esc(r.k),r.n,sum(a.browsers)))}
+    ${tbl(T('os'),a.oses,0,r=>barRow(esc(r.k),r.n,sum(a.oses)))}
+    ${tbl(T('languages'),a.langs,0,r=>barRow(r.k==='bn'?'বাংলা':'English',r.n,sum(a.langs)))}
+  </div>`;
+}
+
+function vLeads(){
+  $('#acts').innerHTML=`<a class="btn" href="/api/admin/leads.csv">⬇ ${T('export')}</a>`;
+  const ST=['new','contacted','demo','won','lost'];
+  const draw=()=>{
+    const q=leadFilter.q.toLowerCase();
+    const list=DB.leads.filter(l=>(!leadFilter.status||l.status===leadFilter.status)&&(!leadFilter.type||l.type===leadFilter.type)&&(!q||[l.name,l.phone,l.email,l.company,l.solution,l.message].join(' ').toLowerCase().includes(q)));
+    $('#lt').innerHTML=list.length?list.map(l=>`<tr><td style="white-space:nowrap">${fmt(l.createdAt)}<div><span class="chip">${esc(l.type)}</span> <span class="chip">${esc(l.lang)}</span></div></td>
+      <td><b>${esc(l.name)}</b><div class="mut">${esc(l.company)}</div>${l.email?`<div class="mut">${esc(l.email)}</div>`:''}</td>
+      <td style="white-space:nowrap"><a href="tel:${esc(l.phone)}">${esc(l.phone)}</a><div><a class="mut" target="_blank" href="https://wa.me/${esc(String(l.phone).replace(/\D/g,'').replace(/^0/,'880'))}">WhatsApp ↗</a></div></td>
+      <td>${esc(l.solution||'—')}${l.message?`<div class="leadx">${esc(l.message)}</div>`:''}<div class="mut" style="font-size:12.5px;margin-top:6px">${T('source')}: <b>${esc([l.utmSource,l.utmMedium,l.utmCampaign].filter(Boolean).join(' / ')||l.referrer||'(direct)')}</b>${l.page?` · ${esc(l.page)}`:''}</div></td>
+      <td><select data-st="${l.id}">${ST.map(s=>`<option ${s===l.status?'selected':''}>${s}</option>`).join('')}</select>
+        <textarea data-nt="${l.id}" rows="2" placeholder="${T('note')}" style="margin-top:6px">${esc(l.note)}</textarea>
+        <div style="display:flex;gap:6px;margin-top:6px"><button class="btn sm" data-sn="${l.id}">${T('save_note')}</button><button class="btn sm dn" data-dl="${l.id}">${T('del')}</button></div></td></tr>`).join(''):`<tr><td colspan="5" class="mut">${T('none')}</td></tr>`;
+  };
+  $('#view').innerHTML=`<div class="panel"><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+    <input id="lq" placeholder="${T('search')}" value="${esc(leadFilter.q)}" style="max-width:320px">
+    <select id="ls" style="max-width:160px"><option value="">${T('status')}: ${T('all')}</option>${ST.map(s=>`<option ${s===leadFilter.status?'selected':''}>${s}</option>`).join('')}</select>
+    <select id="ly" style="max-width:160px"><option value="">${T('type')}: ${T('all')}</option><option ${leadFilter.type==='contact'?'selected':''}>contact</option><option ${leadFilter.type==='demo'?'selected':''}>demo</option></select></div>
+    <div class="tbl"><table><thead><tr><th>${T('date')}</th><th>${T('name')}</th><th>Phone</th><th>${T('solutions')} / message</th><th style="min-width:220px">${T('status')}</th></tr></thead><tbody id="lt"></tbody></table></div></div>`;
+  $('#lq').oninput=e=>{leadFilter.q=e.target.value;draw();};
+  $('#ls').onchange=e=>{leadFilter.status=e.target.value;draw();};
+  $('#ly').onchange=e=>{leadFilter.type=e.target.value;draw();};
+  $('#lt').onchange=async e=>{ const id=e.target.dataset.st; if(!id)return; const r=await api('/leads/'+id,{method:'PUT',body:{status:e.target.value}}); Object.assign(DB.leads.find(l=>l.id===id),r); toast(T('saved')); };
+  $('#lt').onclick=async e=>{
+    const sn=e.target.dataset.sn, dl=e.target.dataset.dl;
+    if(sn){ const r=await api('/leads/'+sn,{method:'PUT',body:{note:$(`[data-nt="${sn}"]`).value}}); Object.assign(DB.leads.find(l=>l.id===sn),r); toast(T('saved')); }
+    if(dl&&confirm(T('confirm_del'))){ await api('/leads/'+dl,{method:'DELETE'}); DB.leads=DB.leads.filter(l=>l.id!==dl); draw(); toast(T('deleted')); }
+  };
+  draw();
+}
+
+function vCollection(){
+  const name=view, sc=SCHEMA[name]; if(!sc){view='dashboard';return shell();}
+  $('#acts').innerHTML=`<button class="btn pr" id="addb">+ ${T('add')}</button>`;
+  $('#addb').onclick=()=>openEditor(name,null);
+  const list=[...DB[name]].sort(sc.sortBy?((a,b)=>String(sc.sortBy(b)).localeCompare(String(sc.sortBy(a)))):((a,b)=>(a.order||0)-(b.order||0)));
+  const vk=sc.visKey||'visible';
+  let filt='';
+  const catTabs = name==='solutions' ? `<div class="tabs"><button class="on" data-cf="">${T('all')} (${list.length})</button>${DB.categories.map(c=>`<button data-cf="${esc(c.id)}">${esc(bt(c.name))} (${list.filter(s=>s.category===c.id).length})</button>`).join('')}</div>`:'';
+  $('#view').innerHTML=`${catTabs}<div class="panel"><div class="tbl"><table><thead><tr><th style="width:90px">${T('order')}</th><th>${T('title')}</th><th>${T('status')}</th><th style="width:170px">${T('actions')}</th></tr></thead><tbody id="ct"></tbody></table></div></div>`;
+  const draw=()=>{
+    const rows=list.filter(x=>!filt||x.category===filt);
+    $('#ct').innerHTML=rows.length?rows.map((x,i)=>`<tr><td style="white-space:nowrap"><button class="btn sm" data-mv="-1" data-id="${x.id}" title="${T('up')}" ${i===0?'disabled':''}>↑</button> <button class="btn sm" data-mv="1" data-id="${x.id}" title="${T('down')}" ${i===rows.length-1?'disabled':''}>↓</button></td>
+      <td><b>${esc(sc.title(x)||'—')}</b>${sc.sub?`<div class="mut">${esc(sc.sub(x))}</div>`:''}</td>
+      <td>${sc.fields.some(f=>f.k===vk)?`<span class="chip ${x[vk]===false?'off':''}" style="cursor:pointer" data-tg="${x.id}">${x[vk]===false?(vk==='published'?T('draft'):T('hidden')):(vk==='published'?T('published_s'):T('visible'))}</span>`:''} ${x.featured?`<span class="chip demo">★ ${T('featured')}</span>`:''}</td>
+      <td style="white-space:nowrap"><button class="btn sm" data-ed="${x.id}">${T('edit')}</button> ${pubPath(name,x)?`<a class="btn sm" target="_blank" href="${esc(pubPath(name,x))}">${T('view')}</a> `:''}<button class="btn sm dn" data-dl="${x.id}">${T('del')}</button></td></tr>`).join(''):`<tr><td colspan="4" class="mut">${T('none')}</td></tr>`;
+  };
+  draw();
+  $$('[data-cf]').forEach(b=>b.onclick=()=>{filt=b.dataset.cf;$$('[data-cf]').forEach(x=>x.classList.toggle('on',x===b));draw();});
+  $('#ct').onclick=async e=>{
+    const b=e.target.closest('[data-ed],[data-dl],[data-mv],[data-tg]'); if(!b)return;
+    if(b.dataset.ed) openEditor(name,list.find(x=>x.id===b.dataset.ed));
+    if(b.dataset.dl&&confirm(T('confirm_del'))){ await api(`/${name}/${b.dataset.dl}`,{method:'DELETE'}); DB[name]=DB[name].filter(x=>x.id!==b.dataset.dl); toast(T('deleted')); shell(); }
+    if(b.dataset.tg){ const it=list.find(x=>x.id===b.dataset.tg); const r=await api(`/${name}/${it.id}`,{method:'PUT',body:{[vk]:it[vk]===false}}); Object.assign(it,r); draw(); toast(T('saved')); }
+    if(b.dataset.mv){
+      const rows=list.filter(x=>!filt||x.category===filt); const i=rows.findIndex(x=>x.id===b.dataset.id), j=i+Number(b.dataset.mv);
+      const gi=list.indexOf(rows[i]), gj=list.indexOf(rows[j]); [list[gi],list[gj]]=[list[gj],list[gi]];
+      list.forEach((x,k)=>x.order=k+1); await api(`/${name}/reorder`,{method:'POST',body:{ids:list.map(x=>x.id)}}); draw();
+    }
+  };
+}
+const pubPath=(name,x)=>!x?null:name==='solutions'?'/solutions/'+x.slug:name==='posts'?'/blog/'+x.slug:name==='pages'?'/'+x.slug:name==='categories'?'/category/'+x.id:null;
+function serpBox(){ return `<div class="f"><span>${T('seo_preview')}</span><div style="display:grid;gap:10px"><div class="serp" data-serp="bn"></div><div class="serp" data-serp="en"></div></div></div>`; }
+function updSerp(name,root,item){
+  const v=readForm(root); const site=DB.settings.siteName||'BaybexAI'; const def=DB.defLang||'bn';
+  const nm=(l)=>(v.name&&v.name[l])||(v.title&&v.title[l])||'';
+  const ds=(l)=>(v.seoDescription&&v.seoDescription[l])||(v.short&&v.short[l])||(v.excerpt&&v.excerpt[l])||(v.intro&&v.intro[l])||(v.description&&v.description[l])||'';
+  const slug=v.slug||(item&&item.slug)||'…';
+  const p=name==='solutions'?'/solutions/'+slug:name==='posts'?'/blog/'+slug:name==='categories'?'/category/'+((item&&item.id)||v.id||'…'):'/'+slug;
+  $$('[data-serp]',root).forEach(b=>{ const l=b.dataset.serp; const t=(v.seoTitle&&v.seoTitle[l])||(nm(l)+' | '+site); let d=ds(l).replace(/[#*>\[\]()`]/g,'').replace(/\s+/g,' ').trim(); if(d.length>158)d=d.slice(0,157)+'…';
+    b.innerHTML=`<span class="u">${esc((DB.siteUrl||'')+(l===def?'':'/'+l)+p)}</span><span class="t">${esc(t.length>62?t.slice(0,61)+'…':t)}</span><span class="d">${esc(d)}</span>`; });
+}
+function openEditor(name,item){
+  const sc=SCHEMA[name], d=$('#drawer'), din=$('#din');
+  const fields=sc.fields.filter(f=>!(f.createOnly&&item));
+  din.innerHTML=`<div class="hd"><h3>${item?T('edit'):T('add')} — ${T(name)}</h3><button class="btn" data-x>✕</button></div>
+    <form class="fg" id="ef">${fields.map(f=>F(f,item?item[f.k]:undefined)).join('')}${fields.some(f=>f.k==='seoTitle')?serpBox():''}
+    <div class="ft"><button type="button" class="btn" data-x>${T('cancel')}</button><button class="btn pr">${T('save')}</button></div></form>`;
+  d.classList.add('open'); wireFields(din,fields);
+  if($('[data-serp]',din)){ updSerp(name,$('#ef'),item); $('#ef').addEventListener('input',()=>updSerp(name,$('#ef'),item)); }
+  $$('[data-x]',din).forEach(b=>b.onclick=closeDrawer);
+  $('#ef').onsubmit=async e=>{ e.preventDefault(); const body=readForm($('#ef'));
+    const r= item ? await api(`/${name}/${item.id}`,{method:'PUT',body}) : await api(`/${name}`,{method:'POST',body});
+    if(item) Object.assign(DB[name].find(x=>x.id===item.id),r); else DB[name].push(r);
+    toast(T('saved')); closeDrawer(); shell(); };
+}
+function closeDrawer(){ $('#drawer').classList.remove('open'); }
+
+function vSettings(){
+  const [g,fields]=SETTINGS[setTab];
+  $('#view').innerHTML=`<div class="tabs">${SETTINGS.map(([k],i)=>`<button data-st="${i}" class="${i===setTab?'on':''}">${T(k)}</button>`).join('')}</div>
+    <div class="panel"><form class="fg" id="sf">${fields.map(f=>F(f,DB.settings[f.k])).join('')}<div><button class="btn pr">${T('save')}</button></div></form></div>`;
+  $$('[data-st]').forEach(b=>b.onclick=()=>{setTab=Number(b.dataset.st);vSettings();});
+  wireFields($('#sf'),fields);
+  $('#sf').onsubmit=async e=>{ e.preventDefault(); DB.settings=await api('/settings',{method:'PUT',body:readForm($('#sf'))}); toast(T('saved')); if(g==='g_brand') shell(); };
+}
+
+async function vMedia(){
+  $('#acts').innerHTML=`<label class="btn pr">⬆ ${T('upload')}<input type="file" accept="image/*" multiple hidden id="mu"></label>`;
+  const files=await api('/uploads');
+  $('#view').innerHTML=files.length?`<div class="media">${files.map(f=>`<div class="it"><img src="${esc(f.url)}" loading="lazy"><div><span class="mut">${Math.round(f.size/1024)} KB</span><span><button class="btn sm" data-cp="${esc(f.url)}">${T('copy')}</button> <button class="btn sm dn" data-rm="${esc(f.url)}">✕</button></span></div></div>`).join('')}</div>`:`<div class="panel mut">${T('none')}</div>`;
+  $('#mu').onchange=async e=>{ for(const f of e.target.files) await uploadFile(f); toast(T('saved')); vMedia(); };
+  $('#view').onclick=async e=>{
+    if(e.target.dataset.cp){ navigator.clipboard&&navigator.clipboard.writeText(location.origin+e.target.dataset.cp); toast(T('copied')); }
+    if(e.target.dataset.rm&&confirm(T('confirm_del'))){ await api('/uploads/'+encodeURIComponent(e.target.dataset.rm.split('/').pop()),{method:'DELETE'}); vMedia(); }
+  };
+}
+
+function vUsers(){
+  $('#view').innerHTML=`<div class="panel"><h3>${T('change_pw')}</h3><form id="pf" class="fg" style="max-width:420px">
+      <label class="f">${T('cur_pw')}<input type="password" name="current" required autocomplete="current-password"></label>
+      <label class="f">${T('new_pw')} (min 8)<input type="password" name="next" required minlength="8" autocomplete="new-password"></label>
+      <div><button class="btn pr">${T('change_pw')}</button></div></form></div>
+    <div class="panel"><h3>${T('users')}</h3><div class="tbl"><table><tr><th>${T('username')}</th><th>${T('name')}</th><th>${T('last_login')}</th><th></th></tr>
+      ${DB.admins.map(a=>`<tr><td><b>${esc(a.username)}</b></td><td>${esc(a.name)}</td><td>${fmt(a.lastLogin)}</td><td>${a.id!==me.id?`<button class="btn sm dn" data-da="${a.id}">${T('del')}</button>`:''}</td></tr>`).join('')}</table></div></div>
+    <div class="panel"><h3>${T('add_admin')}</h3><form id="af" class="fg" style="max-width:420px">
+      <label class="f">${T('name')}<input name="name"></label><label class="f">${T('username')}<input name="username" required></label>
+      <label class="f">${T('password')} (min 8)<input type="password" name="password" required minlength="8" autocomplete="new-password"></label>
+      <div><button class="btn pr">+ ${T('add_admin')}</button></div></form></div>`;
+  $('#pf').onsubmit=async e=>{ e.preventDefault(); await api('/password',{method:'POST',body:Object.fromEntries(new FormData(e.target))}); me=await api('/me'); toast(T('saved')); shell(); };
+  $('#af').onsubmit=async e=>{ e.preventDefault(); const a=await api('/admins',{method:'POST',body:Object.fromEntries(new FormData(e.target))}); DB.admins.push(a); toast(T('saved')); vUsers(); };
+  $$('[data-da]').forEach(b=>b.onclick=async()=>{ if(!confirm(T('confirm_del')))return; await api('/admins/'+b.dataset.da,{method:'DELETE'}); DB.admins=DB.admins.filter(a=>a.id!==b.dataset.da); vUsers(); });
+}
+
+function vBackup(){
+  $('#view').innerHTML=`<div class="panel"><h3>${T('backup_dl')}</h3><p class="mut" style="margin-bottom:12px">data/db.json — settings, solutions, leads…</p><a class="btn pr" href="/api/admin/backup">⬇ ${T('backup_dl')}</a></div>
+    <div class="panel"><h3>${T('restore')}</h3><label class="btn">⬆ ${T('restore')}<input type="file" accept=".json,application/json" hidden id="rf"></label></div>`;
+  $('#rf').onchange=async e=>{ const f=e.target.files[0]; if(!f||!confirm(T('restore_warn')))return;
+    try{ const body=JSON.parse(await f.text()); await api('/restore',{method:'POST',body}); await load(); toast(T('restored')); shell(); }catch(err){ if(err instanceof SyntaxError) toast('Invalid JSON',true); } };
+}
+
+/* ================= Boot ================= */
+(async()=>{ try{ me=await api('/me'); await load(); if(me.mustChange) view='users'; shell(); }catch(e){ if(!me) renderLogin(); } })();
+})();
+</script>
+</body>
+</html>

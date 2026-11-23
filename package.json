@@ -1,0 +1,19 @@
+{
+  "name": "baybexai-site",
+  "version": "1.0.0",
+  "description": "BaybexAI showcase website (Bangla + English) with full admin panel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "compression": "^1.8.2",
+    "express": "^4.21.2",
+    "image-size": "^1.2.1",
+    "multer": "^2.0.2",
+    "pg": "^8.13.1"
+  }
+}
